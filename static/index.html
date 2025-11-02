@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Pet Care Chatbot</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQBDgMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAAAAQIDBAUGB//EAEMQAAEDAgQEAwMHCwEJAAAAAAEAAgMEEQUSITEGE0FRImFxMoGRFCMzQnKhsQcVFjVDUlNiwdHhoiQ0Y3OCwtLw8f/EABkBAAMBAQEAAAAAAAAAAAAAAAABAgMEBf/EACMRAAIDAAICAQUBAAAAAAAAAAABAgMRITEEElETIjJBQhT/2gAMAwEAAhEDEQA/APWAlSBKrJHNQhqOqAFTgmoQBIEJoKVAxUqRF0AOCAkBTggBSgIKEhjghIEqAFTKj6B/onqOo+gf6IAwBuVgcR/RtXQDquf4l+jCljRv4L+pIfsrXwX6F32isjA/1JD9la+C/Qu+0UkD7KHEH08fossLUx8f7Sz7KzLLGXZrHoVKEAJQFIxQlQhAAhKhACIQhAATooynppQM3LpQkTgu05RQjW6Ai6QxdUoRuEoQAoQkQgB6E0JwQAoSpBuhIY8kIBHdQzzshF5DZZ0uMQA6H7llOyEPyZcK5z/FGwluuefjDpGlsYI8yrTcUbfqbLL/AFVfJs/FtS6NhR1H0L/RQRVzHjTfyTaiuiELs+YXG9lqroNbpk6pp5hlgXBWDxKPmmrbbVU4vmmYPUrJ4jAdAHMIcAemqSshLpg65xfKNfBP1JF9la+C/Qu+0VkYL+pIvRa+Ckcl2v1irRDKOO/7yz7KzrLSxtpNSywvoqIaspdmsehoCE61t0EabKcGNShLZCQCWQi6CgBEIQgYiaU4phKBm6hF0LsOQcEJAUHdAEg2QkB0RdAxwQmgpSbBADkApEEtaLk7bobwa5HjdKbAE32TI3h58OvvRVAcrKXhlxqevwWU7Eo6i4w2XJxnEGLuNQI4yXOJsGgblUY6THJLPFBI1gJGu5C6mIUdEHchgM19ZJBcqsMcl57mzSgBp+qvM+lGT2x8npqySWVrg56odiVK7O6jqttTk8NllM4je2X52MttvdehxYiyoAa2UF7tWsk10Wdi8WEi5xKlawneVkeyTprwcb5f0jGw7HH1ADqeN0uW18mw9T0W9T4jDOwRVLXC/wDLoFzON4FQxYWZKCqfJTunY58Zd01H4kLl6bFpsOmEMjnTU4NuU51tP5T09NvJa1+Pq+1kWXreUely4NSyXfTyuDugcTZcviLqrC5y9r3yt7NZf4+S0cMxjBRQsl504a76kxtlKfLjuBufYwRFxt4nC4KJeI296EvJilnZHhPFbXRCB1mG2gAstAYrKGHkVDh3sLql+eOHIo7vhw8PIu1uW5P+Vn41xZhWGxM+SYfA+eRt2Xad+1jsql4tr/sheRUv4Naoqa57RK+rADmksDtC8AXOUdbDXRVBjMsP0j7jzC53Bp6uumqcVxKXM9w5bHE99wPIADTbVXZWNkBDr+9ctqdclFNnTVk020jbg4hiecrtfJacFXBMBlfY/undeeVFOWEmMm/mVBFiM0Ryh7gfVXC2xdMU6YP9YeoOsDZJfyXE4ZxJUwua2X52HqDuF19JVQ1sLZKZ+cHp1C6YWKRx2VSgTIQkutDMVISi6bdAwKaUpKaSkBvISDZC7jlHhCRqVACk6ICR2yBskA4bpXFMG6cgBwKdcZTcJnv17LHx7EjA10LDYDR5HXyHmsrpqMNZrTByniIqqsiopJaieXMxptG1x09bKphs1RilQ6onlcyMatZ1C4fEMSlxCuaLnJzC1o7AdV1nyp9PhDGU4ytI8Ul7XK85rD0vXSHHMTe2RzKd4FuwGq5plVMZw98hzHqrVQ8zxGQnbY33We+xAKUVvaLfC4NanrHtlvnub31WjiOLQVdDlnl5bxpq0WK56KVjHAvOhVWorqSKrDak5mbgXVRg9Jk45rEwrEJKTiCno3yZqWrlEcjS6zSHaadt1i4wag1sokha6Vjyx12npp3W5w3S0NVxQ2aXWnpmmeznaAi1re+ys8X4lBM4uooo2ucS577a3K7qliOC2TbOdZI98BdMHMdHq7X2h7+qnfXNEQY4eJpWTM+R4cHEOzCxy7fApGwyysabg3bprZWzIsV013/Nk7eEX272UHNqJ3NbK6WXN1JtlVWQyMc7N4iBaw0A1791ZwyR7ZhI9zbemypcCPQOEaT5Th1RhUwDi/5yOdp1Y63btoPiqLZJ6WZ8EuZpY7KQ7us6gxCWiq28l5a69gb9F2+J0LMfpI6+mAFYWAzMGzraXAHVcd9Xut/Z10XOLx9GA7LMzz6hY9fT5HE9O/ZbrMNr2EZ6WW22jbptVg1fN4WUkhc7oQuKFc0+juc4NdnKNncx9nGzunYrcwCvka8Fj3McDsCmzcD40+5McMY/4koAVSPAcewsmQwuLGfWiIeF0OhtaYK5JncxY7lsJxc9T1WjS1sFUbRvF+x3XlcuJzTS5ZcwcNLjRXqGtlY8Xec7SCHBQnOHY5VwmtiemkppKr4fUCsoopgdXDxeqmcuhPVpyNY8AlNukJJ0aLlNLZLdPUmyEmyTowEa9lisx0W1jdf0Tvz83+E9dvsjD1Zs+LslCwzjzf4b0fn1vSNyPZB6s3TsgLB/PveJ1kv5/aP2Tyj2QerN0J2Vc+7iID2YXhNHEROgif8ABL2QerOk2HdcVxfnjYwNIvnJI67EldBBiUj4+dIwsZ3I38lynFNQflJedeW6Mn1NwfxC5fImpJJHX40GnrOKNSynnZM4+HM4X7XN1s47jjzhEIp/EwWDSG3AHf3LmsYhAnqqUd87PRb2CTRuwqI2aWkWIPdRKKSUjeLbbiYlFik0jW00j775bdFqREujA3Kllo6aTNPFE1hbpZTUdNoLpSlF8oqMWuGZ9fHI+BoZoQuUqKCslqTndlaHe12Xos9KMnhtdc5iUUkecNuCdQVdUzO2GlTh+YxVFZEbj5nI1500v1+CZOZY5niZpe55vYaj4rKwyp+T15c6FrmklsjybBoPddHTxtkaXtvlGpeXFrbenVdWHE2Zc9PKXDPGWsOtzfZbv6KYxHBh5gooX893hLpTmYDtm0sBub6q1h9C7GmOjpMtoP2pFm+gC7iJkrmxiaYMfCBowaKHLBqOnlGMYLUYdiRp6iIGoPicIzmaQdiP/io1UhpC+ndF85p0tden47g8+IYgyszRZWxZSNiT0K4DEKeZsr8pjms72HEb+X/tj7impaTJYV8LLqmUjM5jzs7f7rLueGcTdTYvDCJbljDGbaXO/wCK5jDaCanpn4lyHMYweBx8Ovx6K9h7+WIpwc+U5g8/ekxo9Jo+KKKpLopnNY8aC+iu5YpfF7bN7h9l4xjT3UuKyBkhayT5xhJtvqrGFcSVNGSOY4sJuLk6K1Ilrk9NxJ9NSxueWMmDdXRE3fby7/FYc2K8t3Mw4ty2u6Jw6LKHEEeIRujldkJty3ajXqLqnU3BJbOH3GtkpSZSibE9dg2KQB1VQRg2+cfFoWeayqnCI6YiemqGz07/AGX9fQhZDJpaap5guBfUhbtNXU0xMbGyNe4fw7tJ9BssbIe6w2rscWaGB4gyhYIZ78t537Fb8lSwRmZ5DYgPaHVcxUUs7YGvjpudYX9rRp8xuuSxfHsSdI+OZ9mMOUNZ7LR5LKiqS/Lou+yL5XZ1XEXF7KTNBR3EttfILhKzizEuYRzXZb6BUJnOkdmN3ud1urtJwxW4nHzIow0fvP0uuttROXlnrALfVKMiunAsRZYvbE0HvIEPwoU8PNrK2KNo0AYcyjUaJaVHNsLpOitQ1eCQvLDWPc8btAt+N1O7EuHYWZyxryPql39Ap94l+kjPZG+T2I3OH8our1PgtRU2J8Df5gqNbxozl8nDYBCB+6AB9yyoOLq+nlLppBJH1a4b+9Q7PgtVN9nYUGAGGoL6qRrgNgLbLQqIqaij50dLCQ3XNYaLloeKaaeHOH2eRs5xI+K08IxOnqocjmMkBdbI+QO19+qlzb4wf085ZmRVz8Xx1vMPzFO0vLegtssLHKn5XJUFtyX2OvUL0CqpZX0skVLSRQ5hs0AX9VzTOE6t+aapqImty2s0ZtlkoPTZTjhwOOQB2StJ0MVn/CybwyypkjcCMsN7l3buun4mwEMw4wxVAB0GZ4IBt0uFTwyNlHhMdPMYzKLnM03BK0c/swSj9+l6FkT5GwsGjnJ8+SMOLGWsfgquFZpatpJ0Yc11PjVWcPeM7Q1riXNt1sNrqFDWkXKaSbKRrX5iDlDfMKDEoGzU3MaWuFrgjyWI7H4XxPka05mkki2t1p8M1YrIpvCQxzc2Ts5byp9OTnVvu8OLqzGK3mP0jBzBjTY3V6jxGaSQRvEbmX0h2b8e6ycUpZaTEJonuBs8nQ30TYngvaAbHuF1pbFHG+JM9hwCY0dEwQ0zmtIvuFaNdWSyeCJrW+a5XhDiCBkTaOd5c7YErrG1sQNyWrls4ZtHGi9A+ZzPHGPcqk+G4XDI+urY4wXm7i7UA2tt8L+ie3FaNnt1EbfV4WTxdicUmH8qJzXh2uZpvZTHdCWGJxJjgxCQw0xyUzRYAbP7+6yiomnlRMjtlaPZOt1zzJGslsDn2I12IW7R1QytfbxOs30W7WIzi+TN4qe5k8IIubaZt1hmazBcuJ89Stbit3MxfITo1rLeXhWTNE5jM9r6AabJkvst083hvfUGy1abELWa4eEtXOxmzHAHUnRWxNZkY+rfxJMEzbrGtkj5tMbB27bqLDsVqqGov4mt6g7FZ/yotjcy5AA1Kow1b3SWeSWjuhcD07SPjGqjkYC1hHUEXBS406j4lpnSQRtjrWglth7QHRc0WCSMubv0Whw3M2OsY6YlrGHxJSbwaS0u8O8MOYWT4kBoLsYfxXTZ2xNDWiwGgAVioIY0ZR4XC7Xdws6WYZ7X1XJ7yb5OhxSXA0V8tZKXSyOMTDs02upKnF4OWYYKUgWsXukLiAugj/J9hzS486pOY3Pztr/cp3cC4edA6Vota+a5+9dH0H8i/wBEfg81qxmkD4jYjz1UkbhsOq9CZ+T7DB+0qD/1qd/A+GuiEfzwYOgkIT+gxryYnmr5Gt2OqrPm5rxGxwL3GwC9NPAGE75Zr/8ANd/dNh4AwmGdk8bJBIw3BMrv7q40pdil5CZwEPDWL1fhopqaSO97xvJt91l3uB4OzhjCp67kOkqni93a5GgdD0/Fb9Bg9PQ2FNGGNAsGsc4Ae69lpSM5sWV8bXDqCdCl6szdiOEpMebUNkmdNUNbGch5rsrdun37qlNxbU0tdHHTSQtjcPHluR6bq7iXBNdW1Erm1kMcLjcRhhuPU31+CoS/k/r3OZnxCnLWG9uQbn35klS3yynZElq8QLiMlQwh/QN0J6LnMUlbJJ8n5bWPd2XRv4KxIvBZiULGb2EBuP8AUqz/AMntc6cTHExn7mK/9UKhrkp+QujF4fqXQy5JgWvN2ODuhWxxTBFWUbecc2VttOnor7uDKlxDnzsdI3Z7Glp/FR1XCGJStyNrTbbxMB/qoVT3Ru2Hrh5TLAWTBjHNLcx1AXZ8J8oUUobu32nEWJKtyfk2xJ7y41zAb6Wh2/1KzRcD4zSsfEMQYWO6CC3/AHLeyLlHDCElGWnIswQ4/wAQVETZOXGHeN9tgunZ+T/C42xsjqpxKfrEA3U2H8C4pQ1Mk8NZme8+K7Rb8VptwTiCOojkFTFlb9Xl/wBbqJKSWIexZHScCYBTvbI4SulbqXOkNirmI8N0c1M9lM58bspygOuAVG/DcfMLoy+G5dcODTte9t1cFPi4jsWt26D/ACs2p7yPjDxmpiqYKySnqPC9riLApGB7SSyR7bixF+q77FuDqzEcSkrCHMLt2ixF+6q/oTPHvzPQFq3XRkzlIZ5orm7T55B/ZXaCSWSdjnuzAEXPcLc/Q2YG9p/TwqeLhWaON7GtnGYWv4RZJpgjkcYlbPihky3Dmt39FA8g0013Ns0bLrjwcTK57xMMxvcuHw2TxwbA5pDhKQd7H/AQtA89ie0sc4E3AUzHXLddBuu+i4IwxlgWy3J7H/yVpnBmEMaSY3767f3VYxHms85f4dh1KZCNfuXqB4NwQnSNxNurgP6qaHgnCiAGw21vq8IwDz6KblhtnX0WjgYglrWR1QJZISCG6XXcjgrDmDSnv6OJUkXCWGxyNcaXxMPhcS4WUyiUmT4WzDZad1Mx73MiJGV7rlpT2w4M0EvDr3tupKXAcMpZHyQ0oDnG5IcdVebQRtF2wjX1WDpbZqrcOpEfql5fqrIA7IsF1HPhVEXmUoj8yrNvJGVAFfl+aQR2VgjTZJZMCIMBTsg7lOslsUARGIKN0F9irBBTHXvokBX5JSGC+6ms5Ic3dMRVNM0bErof5laIKjIPZVoiq6I2sHW9E3luA0Jv5q0WnsmkHoEAUzFJ3TeW7qbq2Q5Mc1yaAr5XDa/xRqCbk/FSODgo3Gx1Q0h6Ifj6qvKCRl0+CsbppbdICg5kg2T4w86uaL91Yew2UOUh19k2xin3XQ5rnDSyW4S5gdlAETojb2W+qY+nicPEdVOW3CjMVtkaMhNLGdiLJPkzAbKblX7pzYy0paMbHTtGouFIIgBYX+KmZew0S28lIEIisPCSFIOaAAJCn7Jcw7IA6VKkslVEhdCEWQAIRZFkACEWRZACJpTyEmVAEaQqTKkypiwjsEmUJ5am2KAGlgTMgUh3TSUAMLAoywKYqNyAK72hRFo7Kd50ULiqEMyBODAmFxT2kpMaGuYConRA6KVzionPPdIYx0PomGOye53mm5vNACBtk4NBTC890oee6TGhSAEosmk3RdSMkuBsmkhNuk1QArnBMLkuVNLSgDrUoQhUSKAlQhACJUiEAKkCEIAEJEIAEiEIAQppQhADLC6aQEqEwI3KNyEIEyF6gchCoBgTwhCkZHIoHoQgBqaUIQA1KEIQA9CEKWUIlCEJACQoQgD/9k=');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      color: #222;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 0;
+    }
+    
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 800px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.5);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      max-height: 700px;
+      animation: slideUp 0.5s ease-out;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    header {
+      padding: 24px 28px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    
+    header h1::before {
+      content: "🐾";
+      font-size: 28px;
+      animation: bounce 2s infinite;
+    }
+    
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    
+    #status {
+      font-size: 13px;
+      opacity: 0.9;
+      font-weight: 500;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+    }
+    
+    #status:empty {
+      display: none;
+    }
+    
+    .log {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 28px;
+      background: #f8f9fa;
+      scroll-behavior: smooth;
+    }
+    
+    .log::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .log::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .log::-webkit-scrollbar-thumb {
+      background: #cbd5e0;
+      border-radius: 4px;
+    }
+    
+    .log::-webkit-scrollbar-thumb:hover {
+      background: #a0aec0;
+    }
+    
+    .msg {
+      margin: 16px 0;
+      line-height: 1.6;
+      animation: fadeIn 0.3s ease-out;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .msg .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .msg.me .avatar {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    .msg.bot .avatar {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+    
+    .msg .content {
+      flex: 1;
+      padding: 14px 18px;
+      border-radius: 18px;
+      max-width: 75%;
+      word-wrap: break-word;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: relative;
+    }
+    
+    .msg.me .content {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-bottom-right-radius: 4px;
+      margin-left: auto;
+    }
+    
+    .msg.bot .content {
+      background: white;
+      color: #2d3748;
+      border: 1px solid #e2e8f0;
+      border-bottom-left-radius: 4px;
+    }
+    
+    .msg .label {
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      opacity: 0.8;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .msg.me .label {
+      color: rgba(255, 255, 255, 0.9);
+    }
+    
+    .msg.bot .label {
+      color: #718096;
+    }
+    
+    .controls {
+      padding: 20px 28px;
+      background: white;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    
+    .input-wrapper {
+      flex: 1;
+      position: relative;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 15px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+      background: #f7fafc;
+    }
+    
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #667eea;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+    
+    input[type="text"]::placeholder {
+      color: #a0aec0;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 8px;
+    }
+    
+    button {
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    button:active {
+      transform: translateY(0);
+    }
+    
+    button#send {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    button#send:hover {
+      background: linear-gradient(135deg, #5568d3 0%, #653a8b 100%);
+    }
+    
+    button#mic {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+    
+    button#mic:hover {
+      background: linear-gradient(135deg, #e083eb 0%, #e5475c 100%);
+    }
+    
+    button#mic.listening {
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+      50% {
+        box-shadow: 0 2px 20px rgba(245, 87, 108, 0.6);
+      }
+    }
+    
+    button.secondary {
+      background: #e2e8f0;
+      color: #4a5568;
+    }
+    
+    button.secondary:hover {
+      background: #cbd5e0;
+    }
+    
+    .hint {
+      color: #718096;
+      font-size: 13px;
+      padding: 16px 28px;
+      background: #f7fafc;
+      border-top: 1px solid #e2e8f0;
+      text-align: center;
+      font-weight: 500;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #a0aec0;
+    }
+    
+    .empty-state::before {
+      content: "💬";
+      font-size: 64px;
+      display: block;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+    
+    .empty-state p {
+      font-size: 16px;
+      margin-top: 12px;
+    }
+    
+    @media (max-width: 640px) {
+      body {
+        padding: 10px;
+      }
+      
+      .app {
+        height: 95vh;
+        border-radius: 20px;
+      }
+      
+      header {
+        padding: 20px;
+      }
+      
+      header h1 {
+        font-size: 20px;
+      }
+      
+      .log {
+        padding: 20px;
+      }
+      
+      .controls {
+        flex-direction: column;
+        padding: 16px;
+      }
+      
+      .button-group {
+        width: 100%;
+      }
+      
+      button {
+        flex: 1;
+        justify-content: center;
+      }
+      
+      .msg .content {
+        max-width: 85%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Smart Pet Care Chatbot</h1>
+      <span id="status"></span>
+    </header>
+    <div id="log" class="log">
+      <div class="empty-state">
+        <p>Start a conversation with your pet care assistant!</p>
+      </div>
+    </div>
+    <div class="hint">💡 Tip: Click Mic to speak, or type and press Send</div>
+    <div class="controls">
+      <div class="input-wrapper">
+      <input id="text" type="text" placeholder="Ask about dog food, cat vaccines, emergencies..." />
+      </div>
+      <div class="button-group">
+        <button id="mic">🎤 Mic</button>
+        <button id="send">Send</button>
+        <button id="stop" class="secondary">Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <audio id="player" preload="auto"></audio>
+  <script src="/script.js"></script>
+</body>
+</html>
+
+
