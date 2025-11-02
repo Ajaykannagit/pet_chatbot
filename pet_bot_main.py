@@ -19,11 +19,6 @@ class PetCareChatbot:
         # Initialize all pet data
         pet_data.initialize_all_data()
         
-        if self.ai_enabled:
-            print(f"[bot] AI-enhanced mode enabled using {ai_provider.provider}")
-        else:
-            print("[bot] Using fallback mode with basic pet data")
-        
     def listen(self):
         """Listen to user input via microphone when available; fallback to text input."""
         # Try microphone speech recognition first
@@ -99,12 +94,12 @@ class PetCareChatbot:
         
         # ALWAYS try AI provider first if enabled (for ALL queries)
         if self.ai_enabled:
-            # Try to get context from pet data for better AI responses
+            # Try to get context from pet data for better AI responses (optional)
             context = None
             animals = ["dog", "cat", "bird", "rabbit", "fish"]
-            problems = ["food", "vaccine", "vaccination", "health", "sick", "behavior", "training", "emergency", "eat", "diet", "litter", "bark", "scratch"]
+            problems = ["food", "vaccine", "vaccination", "health", "sick", "behavior", "training", "emergency", "eat", "diet", "litter", "bark", "scratch", "tame", "taming"]
             
-            # Gather context if we can find relevant pet data
+            # Gather context if we can find relevant pet data (optional enhancement)
             for animal in animals:
                 if animal in user_input_lower:
                     for problem in problems:
@@ -115,14 +110,16 @@ class PetCareChatbot:
                                 break
                     break  # Found animal, no need to check others
             
-            # ALWAYS call AI for any query when enabled
+            # ALWAYS call AI for any query when enabled - this is the primary response method
             try:
                 ai_response = ai_provider.get_response(original_input, context)
-                if ai_response and ai_response[0]:  # Make sure we got a valid response
-                    return ai_response
-            except Exception as e:
-                print(f"[error] AI provider error: {e}")
-                # Fall through to fallback
+                # If AI returns a valid response, use it immediately
+                if ai_response and isinstance(ai_response, tuple) and len(ai_response) >= 2:
+                    if ai_response[0] and len(str(ai_response[0]).strip()) > 0:
+                        return ai_response
+            except Exception:
+                # Silently fall through to fallback - no errors shown
+                pass
         
         # Fallback to basic pet data responses (only if AI disabled or failed)
         animals = ["dog", "cat", "bird", "rabbit", "fish"]

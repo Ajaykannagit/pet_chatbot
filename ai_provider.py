@@ -38,7 +38,6 @@ Important guidelines:
     def _initialize(self):
         """Initialize the selected AI provider"""
         if not self.provider or self.provider == "none":
-            print("[ai] AI provider disabled - using fallback responses")
             return
         
         try:
@@ -49,44 +48,51 @@ Important guidelines:
             elif self.provider == "gemini":
                 self._init_gemini()
             else:
-                print(f"[ai] Unknown provider '{self.provider}' - using fallback")
-        except Exception as e:
-            print(f"[ai] Failed to initialize {self.provider}: {e}")
-            print("[ai] Falling back to basic responses")
+                self.enabled = False
+        except Exception:
+            # Silently disable AI if initialization fails
             self.enabled = False
     
     def _init_openai(self):
         """Initialize OpenAI client"""
         if not OPENAI_API_KEY or OPENAI_API_KEY == "your-openai-key-here":
-            print("[ai] OpenAI API key not set")
             return
         
         try:
             from openai import OpenAI
-            self.client = OpenAI(api_key=OPENAI_API_KEY)
+            # Initialize with timeout to prevent hanging on network issues
+            self.client = OpenAI(
+                api_key=OPENAI_API_KEY,
+                timeout=8.0,  # 8 second timeout
+                max_retries=1
+            )
             self.enabled = True
-            print(f"[ai] OpenAI initialized with model: {OPENAI_MODEL}")
         except ImportError:
-            print("[ai] OpenAI library not installed. Run: pip install openai")
+            pass  # Library not installed
+        except Exception:
+            pass  # Initialization failed
     
     def _init_anthropic(self):
         """Initialize Anthropic client"""
         if not ANTHROPIC_API_KEY or ANTHROPIC_API_KEY == "your-anthropic-key-here":
-            print("[ai] Anthropic API key not set")
             return
         
         try:
             import anthropic
-            self.client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
+            self.client = anthropic.Anthropic(
+                api_key=ANTHROPIC_API_KEY,
+                timeout=8.0,
+                max_retries=1
+            )
             self.enabled = True
-            print(f"[ai] Anthropic initialized with model: {ANTHROPIC_MODEL}")
         except ImportError:
-            print("[ai] Anthropic library not installed. Run: pip install anthropic")
+            pass  # Library not installed
+        except Exception:
+            pass  # Initialization failed
     
     def _init_gemini(self):
         """Initialize Google Gemini client"""
         if not GEMINI_API_KEY or GEMINI_API_KEY == "your-gemini-key-here":
-            print("[ai] Gemini API key not set")
             return
         
         try:
@@ -98,20 +104,17 @@ Important guidelines:
             try:
                 self.client = genai.GenerativeModel(model_name)
                 self.enabled = True
-                print(f"[ai] Gemini initialized with model: {model_name}")
-            except Exception as e1:
+            except Exception:
                 # Fallback to gemini-2.0-flash
                 try:
                     self.client = genai.GenerativeModel("gemini-2.0-flash")
                     self.enabled = True
-                    print(f"[ai] Gemini initialized with fallback model: gemini-2.0-flash")
-                except Exception as e2:
-                    raise Exception(f"Failed to initialize with {model_name} or gemini-2.0-flash: {e1}, {e2}")
+                except Exception:
+                    pass  # Both failed
         except ImportError:
-            print("[ai] Google Generative AI library not installed. Run: pip install google-generativeai")
-        except Exception as e:
-            print(f"[ai] Gemini initialization error: {e}")
-            print("[ai] Try checking your API key or model name")
+            pass  # Library not installed
+        except Exception:
+            pass  # Initialization failed
     
     def _clean_markdown(self, text):
         """Remove markdown formatting from text"""
@@ -160,8 +163,8 @@ Important guidelines:
             if response:
                 return response
             return None
-        except Exception as e:
-            print(f"[ai] Error getting AI response: {e}")
+        except Exception:
+            # Silently fail and return None for fallback
             return None
     
     def _get_openai_response(self, prompt):
@@ -180,40 +183,50 @@ Important guidelines:
             text = self._clean_markdown(text)
             emotion = self._detect_emotion(text)
             return text, emotion
-        except Exception as e:
-            print(f"[ai] OpenAI API error: {e}")
-            raise
+        except Exception:
+            # Silently fail and return None for fallback
+            return None
     
     def _get_anthropic_response(self, prompt):
         """Get response from Anthropic"""
-        message = self.client.messages.create(
-            model=ANTHROPIC_MODEL,
-            max_tokens=300,
-            temperature=0.7,
-            system=self.system_prompt,
-            messages=[
-                {"role": "user", "content": prompt}
-            ]
-        )
-        text = message.content[0].text.strip()
-        text = self._clean_markdown(text)
-        emotion = self._detect_emotion(text)
-        return text, emotion
+        try:
+            message = self.client.messages.create(
+                model=ANTHROPIC_MODEL,
+                max_tokens=300,
+                temperature=0.7,
+                system=self.system_prompt,
+                messages=[
+                    {"role": "user", "content": prompt}
+                ],
+                timeout=8.0  # 8 second timeout
+            )
+            text = message.content[0].text.strip()
+            text = self._clean_markdown(text)
+            emotion = self._detect_emotion(text)
+            return text, emotion
+        except Exception:
+            # Silently fail and return None for fallback
+            return None
     
     def _get_gemini_response(self, prompt):
         """Get response from Google Gemini"""
-        full_prompt = f"{self.system_prompt}\n\n{prompt}"
-        response = self.client.generate_content(
-            full_prompt,
-            generation_config={
-                "temperature": 0.7,
-                "max_output_tokens": 300,
-            }
-        )
-        text = response.text.strip()
-        text = self._clean_markdown(text)
-        emotion = self._detect_emotion(text)
-        return text, emotion
+        try:
+            full_prompt = f"{self.system_prompt}\n\n{prompt}"
+            response = self.client.generate_content(
+                full_prompt,
+                generation_config={
+                    "temperature": 0.7,
+                    "max_output_tokens": 300,
+                },
+                request_options={"timeout": 8}  # 8 second timeout
+            )
+            text = response.text.strip()
+            text = self._clean_markdown(text)
+            emotion = self._detect_emotion(text)
+            return text, emotion
+        except Exception:
+            # Silently fail and return None for fallback
+            return None
     
     def _detect_emotion(self, text):
         """Detect emotion from response text for TTS"""

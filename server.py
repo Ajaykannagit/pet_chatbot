@@ -71,8 +71,9 @@ def api_tts():
                     buf.write(audio_bytes)
         buf.seek(0)
         return send_file(buf, mimetype="audio/mpeg", as_attachment=False, download_name="speech.mp3")
-    except Exception as e:
-        return jsonify({"error": f"TTS error: {e}"}), 500
+    except Exception:
+        # Silently return 501 so frontend can fallback to browser TTS
+        return jsonify({"error": "TTS not available"}), 501
 
 
 if __name__ == "__main__":
