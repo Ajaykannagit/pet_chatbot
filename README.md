@@ -35,7 +35,7 @@
 ### 📚 Comprehensive Pet Knowledge
 - **Multi-Pet Support**: Dogs, cats, birds, rabbits, fish, and more
 - **Emergency Detection**: Automatically flags urgent pet situations
-- **Expert Advice**: Food, vaccines, health, behavior, training guidance
+- **Expert Advice**: Food, vaccines, health, behavior, training guidance.
 
 ---
 
